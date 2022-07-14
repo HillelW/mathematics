@@ -161,7 +161,7 @@ class Complex (object):
         return f'{self.x} + {self.y}i'
     
     def __repr__ (self) -> str:
-        return f'Complex ({self.x}, {self.y})'
+        return f'({self.x}, {self.y})'
 
 class ComplexVector (object):
     '''
@@ -249,7 +249,7 @@ class ComplexVector (object):
            v = ComplexVector ([Complex (0.18257418583505536, 0.3651483716701107), Complex (0.5477225575051661, 0.7302967433402214)])
            v.is_normalized () == True
         '''
-        return abs(self.norm() - self.normalize().norm()) < epsilon
+        return abs (self.norm() - self.normalize().norm()) < epsilon
 
     def is_orthogonal_to (self, other, epsilon=0.1) -> bool:
         '''
@@ -287,35 +287,35 @@ class ComplexVector (object):
 
     def sum_all (self, list_of_complex_vectors):
         '''returns the result of summing this ComplexVector with a list of ComplexVectors'''
-        return reduce((lambda x, y: x + y), list_of_complex_vectors)
+        return reduce ((lambda x, y: x + y), list_of_complex_vectors)
 
     def __sub__ (self, other) -> ComplexVector:
         '''returns the result of subtracting this complex vector from antoher complex vector'''
-        pairs = zip(self, other)
-        return ComplexVector([u - v for (u, v) in pairs])
+        pairs = zip (self, other)
+        return ComplexVector ([u - v for (u, v) in pairs])
 
     def __mul__(self, other) -> ComplexVector:
         '''returns the component-wise product of two complex vectors'''
-        pairs = zip(self, other)
-        return ComplexVector([u * v for (u, v) in pairs])
+        pairs = zip (self, other)
+        return ComplexVector ([u * v for (u, v) in pairs])
 
     def __truediv__ (self, other: ComplexVector) -> ComplexVector:
         '''returns the component-wise division of two complex vectors'''
-        pairs = zip(self, other)
-        return ComplexVector([u / v for (u, v) in pairs])
+        pairs = zip (self, other)
+        return ComplexVector ([u / v for (u, v) in pairs])
 
     def scalar_multiplication (self, scalar: float):
         '''returns the component-wise scalar multiplication of a complex vector with a scalar'''
         if type(scalar) == Complex:
-            return ComplexVector([u * scalar for u in self.list_of_complex_numbers]) 
-        return ComplexVector([u.scalar_multiplication(scalar) for u in self.list_of_complex_numbers])
+            return ComplexVector ([u * scalar for u in self.list_of_complex_numbers]) 
+        return ComplexVector ([u.scalar_multiplication (scalar) for u in self.list_of_complex_numbers])
     
     def complex_conjugate (self):
         '''returns the component-wise complex-conjugate of a complex vector'''
-        return ComplexVector([u.complex_conjugate() for u in self.list_of_complex_numbers])
+        return ComplexVector ([u.complex_conjugate () for u in self.list_of_complex_numbers])
 
     def __len__ (self):
-        return len(self.list_of_complex_numbers)
+        return len (self.list_of_complex_numbers)
 
     def __iter__ (self):
         '''allows complex vectors to be used with the zip() function'''
@@ -336,32 +336,35 @@ class ComplexVector (object):
      
     def __repr__ (self):
         list_of_strings = [repr(c) for c in self.list_of_complex_numbers]
-        return 'ComplexVector ([' + ', '.join(list_of_strings) + '])'
+        return '[' + ', '.join(list_of_strings) + ']'
 
-def sum_all (list_of_complex_vectors):
+def sum_all (list_of_complex_vectors: List[ComplexVector]) -> ComplexVector:
     '''returns the sum of a list of ComplexVectors'''
-    return reduce((lambda x, y: x + y), list_of_complex_vectors)
+    return reduce ((lambda x, y: x + y), list_of_complex_vectors)
 
-def gram_schmidt (list_of_vectors):
-    '''given a basis of ComplexVectors, returns an orthonormal basis'''
-    if len(list_of_vectors) == 0:
+def gram_schmidt (list_of_vectors: List[ComplexVector]):
+    '''given a a linearly independent set of complex vectors, returns an orthonormal basis'''
+    if len (list_of_vectors) == 0:
         return []
 
     if len (list_of_vectors) == 1:
-        return [v.normalize() for v in list_of_vectors]
+        return [v.normalize () for v in list_of_vectors]
 
     # grab the last vector from the list of vectors
-    u = list_of_vectors[-1]
+    # u0 = list_of_vectors[0]
+
+    # for v, index in enumerate (list_of_vectors[1:]):
+
+    u = list_of_vectors[0]
 
     # orthonormalize the rest of the vectors
-    basis = gram_schmidt(list_of_vectors[0: -1])
+    basis = gram_schmidt (list_of_vectors[1:])
 
     # compute the last orthonormal basis vector
     w = (u - sum_all(ComplexVector(u.projection_onto(v)  for v in basis)))
 
     # append this orthonormal vector to the rest of the orthonormal basis
-    basis.append(w.normalize())
-
+    basis.append (w.normalize())
     return basis
 
 def are_normalized (list_of_vectors):
@@ -380,7 +383,7 @@ def are_orthonormal (list_of_vectors):
        v2 = ComplexVector([Complex(1/math.sqrt(2), 0), Complex(-1/math.sqrt(2), 0)])
        are_orthonormal([v1, v2]) # true
     '''
-    return are_normalized(list_of_vectors) and are_orthogonal(list_of_vectors)
+    return are_normalized (list_of_vectors) and are_orthogonal(list_of_vectors)
 
 def linear_combination (list_of_vectors, list_of_scalars):
     '''given several lists of Complex objects, or several ComplexVectors, and a list of scalars,

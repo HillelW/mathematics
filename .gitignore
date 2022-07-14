@@ -2,3 +2,4 @@ __pycache__/
 .python-version
 poetry.lock
 pyproject.toml
+.ipynb_checkpoints/
